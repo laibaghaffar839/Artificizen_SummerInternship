@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Ahmed",
+        "age": 20,
+        "major": "Computer Science"
+    },
+    {
+        "name": "Ali",
+        "age": 22,
+        "major": "Mathematics"
+    },
+    {
+        "name": "Sara",
+        "age": 21,
+        "major": "Physics"
+    }
+]
