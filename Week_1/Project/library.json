@@ -1,0 +1,28 @@
+{
+    "books": {
+        "ISBN001": {
+            "title": "Python",
+            "author": "Ahmed",
+            "isbn": "ISBN001",
+            "copies_available": 6
+        },
+        "ISBN002": {
+            "title": "Java",
+            "author": "Ali",
+            "isbn": "ISBN002",
+            "copies_available": 4
+        }
+    },
+    "members": {
+        "M001": {
+            "name": "Hassan",
+            "member_id": "M001",
+            "borrowed_books": []
+        },
+        "M002": {
+            "name": "Areeba",
+            "member_id": "M002",
+            "borrowed_books": []
+        }
+    }
+}
