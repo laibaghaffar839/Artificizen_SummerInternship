@@ -1,131 +1,78 @@
-# Embeddings & Semantic Search Practice
+# Embeddings & Semantic Search
 
 ## Overview
 
-In this practice, I learned how text embeddings work and how semantic search finds documents based on meaning instead of exact words. I also learned how to use ChromaDB and Qdrant to store and search vector embeddings.
+This project is a practice of embeddings, semantic search, and vector databases using Python. It demonstrates how text can be converted into vector embeddings, compared based on meaning, and stored in vector databases for efficient retrieval.
 
 ---
 
-## Topics Learned
+## What I Learned
 
-- What an embedding is
-- How Sentence Transformers create embeddings
-- Cosine similarity
-- Semantic search
-- Vector databases
-- ChromaDB (in-memory)
-- Qdrant (in-memory)
-- Metadata and payloads
-- Filtering search results
-- Batch embedding and storing data
+- Understanding text embeddings
+- Using the `all-MiniLM-L6-v2` Sentence Transformer model
+- Generating embeddings for text
+- Measuring similarity using cosine similarity
+- Performing semantic search
+- Working with vector databases
+- Creating and querying ChromaDB collections
+- Creating and querying Qdrant collections
+- Storing metadata with vector embeddings
+- Filtering search results using metadata
+- Batch embedding and storing multiple documents
+- Building reusable utility functions for future RAG applications
 
 ---
 
-## Tools Used
+## Technologies Used
 
 - Python
-- sentence-transformers
+- Sentence Transformers
 - NumPy
 - ChromaDB
 - Qdrant
 
 ---
 
-# Question 1
+## Project Files
 
-**Task:**
-Embed six sentences and calculate cosine similarity between them.
-
-**What I learned:**
-- Generate embeddings using `all-MiniLM-L6-v2`
-- Compare sentence similarity
-- Rank results from highest to lowest similarity
-
-**Output:**
-
-![alt text](task1.png)
+- `main.py`
+- `task1.py`
+- `task2.py`
+- `task3.py`
+- `task4.py`
+- `task5.py`
+- `task6.py`
 
 ---
 
-# Question 2
+## Key Concepts
 
-**Task:**
-Create a `semantic_search()` function to find the top 3 most similar documents.
+### Embeddings
+Embeddings convert text into numerical vectors while preserving the semantic meaning of the text.
 
-**What I learned:**
-- Embed both query and documents
-- Calculate cosine similarity
-- Return the most relevant documents
+### Cosine Similarity
+Cosine similarity measures how similar two vectors are. It is commonly used to compare embeddings.
 
-**Output:**
+### Semantic Search
+Semantic search finds documents based on their meaning rather than exact keyword matches.
 
-![alt text](task2.png)
+### ChromaDB
+ChromaDB is a vector database used to store embeddings and perform semantic searches.
 
----
+### Qdrant
+Qdrant is a vector database that stores embeddings along with metadata and supports filtered searches.
 
-# Question 3
+### Metadata
+Metadata provides additional information about stored documents, such as their source or category.
 
-**Task:**
-Store documents in ChromaDB and perform semantic search.
+### Batch Embedding
+Batch embedding allows multiple documents to be converted into embeddings and stored efficiently in a single operation.
 
-**What I learned:**
-- Create an in-memory ChromaDB collection
-- Store embeddings
-- Query using natural language
-
-**Output:**
-
-![alt text](task3.png)
-
----
-
-# Question 4
-
-**Task:**
-Store documents in Qdrant and filter results using metadata.
-
-**What I learned:**
-- Create a Qdrant collection
-- Store vectors with payloads
-- Filter documents using the `source` field
-
-**Output:**
-
-![alt text](task4.png)
-
----
-
-# Question 5
-
-**Task:**
-Test semantic search with different words but similar meaning.
-
-**What I learned:**
-- Semantic search understands meaning, not just exact words.
-- Similar sentences can be matched even if they use different vocabulary.
-
-**Output:**
-
-![alt text](task5.png)
-
----
-
-# Question 6
-
-**Task:**
-Create an `embed_and_store()` utility function.
-
-**What I learned:**
-- Batch embed multiple documents
-- Store vectors with metadata
-- Reuse the function for future RAG projects
-
-**Output:**
-
-![alt text](task6.png)
+### RAG Preparation
+The reusable embedding and storage utility created in this project can be used later for building Retrieval-Augmented Generation (RAG) applications.
 
 ---
 
 ## Conclusion
 
-This practice helped me understand how embeddings convert text into vectors and how semantic search retrieves the most relevant documents. I also learned to use ChromaDB and Qdrant for vector storage, metadata filtering, and document retrieval. The `embed_and_store()` function will be useful when building a Retrieval-Augmented Generation (RAG) pipeline.
+This project helped me understand the complete workflow of semantic search, from generating embeddings to storing and retrieving vectors using ChromaDB and Qdrant. It also provided a strong foundation for building Retrieval-Augmented Generation (RAG) systems in future projects.
