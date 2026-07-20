@@ -1,0 +1,46 @@
+from main import model
+import numpy as np
+
+
+# Cosine similarity function
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+def semantic_search(query, documents):
+
+    query_embedding = model.encode(query)
+
+    doc_embeddings = model.encode(documents)
+
+
+    results=[]
+
+    for doc, embedding in zip(documents, doc_embeddings):
+
+        score = cosine_similarity(query_embedding,embedding)
+
+        results.append((doc, score))
+
+
+    results.sort(key=lambda x:x[1],reverse=True)
+
+
+    return results[:3]
+
+
+
+documents=[
+    "Dogs are friendly animals",
+    "Python is a programming language",
+    "Cats like sleeping",
+    "Machine learning uses data",
+    "A puppy plays with a ball"
+]
+
+
+result = semantic_search("A dog playing",documents)
+
+
+for doc,score in result:
+    print(score, doc)
+
