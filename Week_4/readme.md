@@ -198,14 +198,6 @@ On any new system, install all dependencies using:
 ```bash
 pip install -r requirements.txt
 ```
-
-### Why requirements.txt is important
-
-* Ensures same package versions across all environments
-* Prevents compatibility issues between development and production
-* Makes project deployment easier
-* Required for reproducibility in AI/ML pipelines
-
 ### Recommended practice
 
 Always update `requirements.txt` after installing new packages:
