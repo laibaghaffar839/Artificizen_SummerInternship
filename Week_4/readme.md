@@ -396,13 +396,6 @@ Extract → Chunk → Embed → Store → Retrieve → Augment → Generate → 
 
 ---
 
-## Testing
-
-```bash
-pytest
-```
-
----
 
 ## Project Summary
 
