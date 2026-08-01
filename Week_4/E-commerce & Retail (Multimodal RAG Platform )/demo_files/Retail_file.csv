@@ -1,0 +1,55 @@
+Order Date,Customer Name,State,Category,Sub-Category,Sales,Quantity,Profit,Day,Month,Year
+03/01/2021,Darren Powers,Texas,Office Supplies,Paper,16.45,2,6,Sun,Jan,2021
+04/01/2021,Phillina Ober,Illinois,Office Supplies,Labels,11.78,3,4.27,Mon,Jan,2021
+04/01/2021,Phillina Ober,Illinois,Office Supplies,Storage,272.74,3,-64.77,Mon,Jan,2021
+04/01/2021,Phillina Ober,Illinois,Office Supplies,Binders,3.54,2,-5.49,Mon,Jan,2021
+05/01/2021,Mick Brown,Pennsylvania,Office Supplies,Art,19.54,3,4.88,Tue,Jan,2021
+06/01/2021,Lycoris Saunders,California,Office Supplies,Paper,19.44,3,9.33,Wed,Jan,2021
+06/01/2021,Jack O'Briant,Georgia,Office Supplies,Art,12.78,3,5.24,Wed,Jan,2021
+06/01/2021,Maria Etezadi,Kentucky,Furniture,Chairs,2573.82,9,746.41,Wed,Jan,2021
+06/01/2021,Maria Etezadi,Kentucky,Office Supplies,Binders,609.98,2,274.49,Wed,Jan,2021
+06/01/2021,Maria Etezadi,Kentucky,Office Supplies,Art,5.48,2,1.48,Wed,Jan,2021
+06/01/2021,Maria Etezadi,Kentucky,Technology,Phones,391.98,2,113.67,Wed,Jan,2021
+06/01/2021,Maria Etezadi,Kentucky,Technology,Phones,755.96,4,204.11,Wed,Jan,2021
+06/01/2021,Maria Etezadi,Kentucky,Office Supplies,Fasteners,31.12,4,0.31,Wed,Jan,2021
+06/01/2021,Maria Etezadi,Kentucky,Office Supplies,Paper,6.54,1,3.01,Wed,Jan,2021
+07/01/2021,Vivek Sundaresam,Texas,Furniture,Furnishings,76.73,3,-53.71,Thu,Jan,2021
+07/01/2021,Vivek Sundaresam,Texas,Office Supplies,Binders,10.43,7,-18.25,Thu,Jan,2021
+09/01/2021,Melanie Seite,Texas,Office Supplies,Art,9.34,2,1.17,Sat,Jan,2021
+09/01/2021,Melanie Seite,Texas,Technology,Accessories,31.2,3,9.75,Sat,Jan,2021
+10/01/2021,Anthony Jacobs,Virginia,Office Supplies,Labels,2.89,1,1.36,Sun,Jan,2021
+10/01/2021,Anthony Jacobs,Virginia,Furniture,Furnishings,51.94,1,21.3,Sun,Jan,2021
+11/01/2021,Seth Vernon,Delaware,Furniture,Furnishings,9.94,2,3.08,Mon,Jan,2021
+13/01/2021,Chris Selesnick,Louisiana,Office Supplies,Envelopes,11.36,2,5.34,Wed,Jan,2021
+13/01/2021,Chris Selesnick,Louisiana,Office Supplies,Envelopes,50.94,3,25.47,Wed,Jan,2021
+13/01/2021,Chris Selesnick,Louisiana,Technology,Accessories,646.74,6,258.7,Wed,Jan,2021
+13/01/2021,Chris Selesnick,Louisiana,Office Supplies,Binders,5.64,3,2.71,Wed,Jan,2021
+13/01/2021,Chris Selesnick,Louisiana,Office Supplies,Storage,572.58,6,34.35,Wed,Jan,2021
+13/01/2021,Natalie DeCherney,South Carolina,Furniture,Chairs,545.94,6,87.35,Wed,Jan,2021
+13/01/2021,Brian Dahlen,California,Office Supplies,Storage,1325.85,5,238.65,Wed,Jan,2021
+13/01/2021,Brian Dahlen,California,Furniture,Bookcases,334,3,3.93,Wed,Jan,2021
+13/01/2021,Brian Dahlen,California,Office Supplies,Art,19.9,5,6.57,Wed,Jan,2021
+13/01/2021,Michael Moore,Ohio,Office Supplies,Paper,37.41,7,13.09,Wed,Jan,2021
+13/01/2021,Michael Moore,Ohio,Office Supplies,Binders,3.44,2,-2.52,Wed,Jan,2021
+14/01/2021,Brendan Sweed,Pennsylvania,Furniture,Bookcases,61.96,4,-53.29,Thu,Jan,2021
+15/01/2021,Erica Hackney,Georgia,Technology,Accessories,149.95,5,65.98,Fri,Jan,2021
+16/01/2021,Delfina Latchford,Pennsylvania,Furniture,Furnishings,127.1,6,28.6,Sat,Jan,2021
+16/01/2021,Delfina Latchford,Pennsylvania,Technology,Phones,124.2,3,-31.05,Sat,Jan,2021
+16/01/2021,Delfina Latchford,Pennsylvania,Office Supplies,Binders,18.59,2,-13.63,Sat,Jan,2021
+16/01/2021,Delfina Latchford,Pennsylvania,Office Supplies,Labels,30.07,3,10.15,Sat,Jan,2021
+18/01/2021,David Wiener,Oregon,Office Supplies,Appliances,64.86,4,6.49,Mon,Jan,2021
+19/01/2021,Toby Swindell,Arizona,Office Supplies,Binders,32.34,10,-23.72,Tue,Jan,2021
+19/01/2021,Toby Swindell,Arizona,Office Supplies,Paper,56.06,4,19.62,Tue,Jan,2021
+19/01/2021,Toby Swindell,Arizona,Office Supplies,Envelopes,108.72,5,36.69,Tue,Jan,2021
+19/01/2021,Toby Swindell,Arizona,Furniture,Bookcases,181.47,5,-320.6,Tue,Jan,2021
+20/01/2021,Hunter Lopez,Arkansas,Technology,Phones,699.93,7,181.98,Wed,Jan,2021
+20/01/2021,Hunter Lopez,Arkansas,Office Supplies,Art,22.96,7,6.66,Wed,Jan,2021
+20/01/2021,Hunter Lopez,Arkansas,Furniture,Furnishings,38.6,4,11.58,Wed,Jan,2021
+20/01/2021,Hunter Lopez,Arkansas,Office Supplies,Art,6.63,3,1.79,Wed,Jan,2021
+20/01/2021,Hunter Lopez,Arkansas,Office Supplies,Envelopes,23.34,3,10.97,Wed,Jan,2021
+20/01/2021,Hunter Lopez,Arkansas,Furniture,Chairs,1067.94,3,224.27,Wed,Jan,2021
+20/01/2021,Mark Van Huff,California,Office Supplies,Paper,19.36,2,9.29,Wed,Jan,2021
+20/01/2021,Mark Van Huff,California,Furniture,Furnishings,19.3,2,5.79,Wed,Jan,2021
+20/01/2021,Xylona Preis,Michigan,Office Supplies,Storage,13.98,1,4.05,Wed,Jan,2021
+20/01/2021,Xylona Preis,Michigan,Furniture,Furnishings,272.94,3,30.02,Wed,Jan,2021
+20/01/2021,Xylona Preis,Michigan,Office Supplies,Binders,19.05,5,8.95,Wed,Jan,2021
