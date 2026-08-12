@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from schemas.room import RoomCreate
+from schemas.room import RoomCreate, RoomUpdate
 
 from db.database import get_db
 from db.models import ChatRoom, User
@@ -63,3 +63,35 @@ def delete_room(
     return {
         "message": "Room deleted successfully"
     }
+
+# Change start here
+
+# update route
+@router.patch("/{room_id}")
+def update_room(
+    room_id: int,
+    room_data: RoomUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    room = db.query(ChatRoom).filter(
+        ChatRoom.id == room_id,
+        ChatRoom.owner_id == current_user.id
+    ).first()
+
+    if room is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Room not found"
+        )
+
+    if room_data.name is not None:
+        room.name = room_data.name
+
+    if room_data.description is not None:
+        room.description = room_data.description
+
+    db.commit()
+    db.refresh(room)
+
+    return room
