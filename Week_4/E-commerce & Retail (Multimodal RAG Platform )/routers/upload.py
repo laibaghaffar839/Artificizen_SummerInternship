@@ -198,3 +198,60 @@ def upload_file(room_id: int,file: UploadFile = File(...),current_user: User = D
             status_code=500,
             detail=f"File processing failed: {str(e)}"
         )
+# changes start here
+# Delete uploaded file route
+@router.delete("/{room_id}/{file_id}")
+def delete_uploaded_file(
+    room_id: int,
+    file_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+
+    # Check room belongs to user
+    room = db.query(ChatRoom).filter(
+        ChatRoom.id == room_id,
+        ChatRoom.owner_id == current_user.id
+    ).first()
+
+
+    if room is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Room not found or you don't have permission"
+        )
+
+
+    # Find uploaded file
+    uploaded_file = db.query(UploadedFile).filter(
+        UploadedFile.id == file_id,
+        UploadedFile.room_id == room_id
+    ).first()
+
+
+    if uploaded_file is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File not found"
+        )
+
+
+    # Delete physical file from uploads folder
+    if os.path.exists(uploaded_file.file_path):
+
+        os.remove(
+            uploaded_file.file_path
+        )
+
+
+    # Delete database record
+    db.delete(
+        uploaded_file
+    )
+
+    db.commit()
+
+
+    return {
+        "message": "File deleted successfully"
+    }
