@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from db.database import get_db
@@ -6,7 +7,6 @@ from db.models import ChatRoom, ChatMessage, User
 from services.auth import get_current_user
 
 from schemas.chat import ChatRequest, ChatResponse
-
 from services.rag import generate_answer
 
 router = APIRouter(prefix="/chat",tags=["Chat"])
