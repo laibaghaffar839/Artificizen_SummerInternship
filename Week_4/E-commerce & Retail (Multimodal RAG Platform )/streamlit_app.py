@@ -1,28 +1,37 @@
 import streamlit as st
 import requests
+import time
 import streamlit.components.v1 as components
-
 
 # FastAPI backend URL
 API_URL = "http://127.0.0.1:8000"
 
-
 # Session state initialization
 if "token" not in st.session_state:
     st.session_state.token = None
-
+if "username" not in st.session_state:
+    st.session_state.username = "User"
 if "room_id" not in st.session_state:
     st.session_state.room_id = None
-
 if "room_name" not in st.session_state:
     st.session_state.room_name = None
+if "show_instructions" not in st.session_state:
+    st.session_state.show_instructions = True
 
 #Authorization helper
 def get_headers():
-    return {
-        "Authorization": f"Bearer {st.session_state.token}"
-    }
+    return {"Authorization": f"Bearer {st.session_state.token}"}
 
+# Logout Helper
+def logout():
+
+    st.session_state.token = None
+    st.session_state.username = "User"
+    st.session_state.room_id = None
+    st.session_state.room_name = None
+    st.rerun()
+
+# Login / Register UI
 # Login / Register UI
 def show_auth_page():
 
@@ -34,28 +43,13 @@ def show_auth_page():
     with login_tab:
 
         st.subheader("Login")
-        login_email = st.text_input(
-            "Email",
-            key="login_email"
-        )
 
-        login_password = st.text_input(
-            "Password",
-            type="password",
-            key="login_password"
-        )
+        login_email = st.text_input("Email",key="login_email")
+        login_password = st.text_input("Password",type="password",key="login_password")
 
 
         if st.button("Login"):
-
-            response = requests.post(
-                f"{API_URL}/auth/login",
-                data={
-                    "username": login_email,
-                    "password": login_password
-                }
-            )
-
+            response = requests.post(f"{API_URL}/auth/login",data={"username": login_email,"password": login_password})
 
             if response.status_code == 200:
 
@@ -65,197 +59,233 @@ def show_auth_page():
                 st.rerun()
 
             else:
-
-                st.error(
-                    response.json().get(
-                        "detail",
-                        "Login failed"
-                    )
-                )
-
+                st.error(response.json().get("detail","Login failed"))
 
     # REGISTER
-
     with register_tab:
 
         st.subheader("Create Account")
 
-        register_username = st.text_input(
-            "Username",
-            key="register_username"
-        )
-
-        register_email = st.text_input(
-            "Email",
-            key="register_email"
-        )
-
-        register_password = st.text_input(
-            "Password",
-            type="password",
-            key="register_password"
-        )
+        register_username = st.text_input("Username",key="register_username")
+        register_email = st.text_input("Email",key="register_email")
+        register_password = st.text_input("Password",type="password",key="register_password")
 
 
         if st.button("Register"):
-
-            response = requests.post(
-                f"{API_URL}/auth/register",
-                json={
-                    "username": register_username,
-                    "email": register_email,
-                    "password": register_password
-                }
-            )
-
+            response = requests.post(f"{API_URL}/auth/register",json={"username": register_username,"email": register_email,"password": register_password})
 
             if response.status_code in [200, 201]:
-
-                st.success(
-                    "Registration successful! "
-                    "You can now login."
-                )
+                st.success("Registration successful! " "You can now login.")
 
             else:
+                st.error(response.json().get("detail","Registration failed"))
 
-                st.error(
-                    response.json().get(
-                        "detail",
-                        "Registration failed"
-                    )
-                )
-
-# Rooms Page
+# Create Rooms 
 def show_rooms_page():
 
-    st.title("📚 My Chat Rooms")
+    # Header
+    col1, col2 = st.columns([4, 1])
 
-    # Logout
-    if st.button("🚪 Logout"):
-        st.session_state.token = None
-        st.session_state.room_id = None
-        st.session_state.room_name = None
-        st.rerun()
+    with col1:
+        st.title("📚 My Chat Rooms")
+        st.subheader(f"Welcome, {st.session_state.get('username', 'User')}!")
 
-    # Create New Room
-    with st.expander("➕ Create New Room"):
-
-        name = st.text_input(
-            "Room Name",
-            placeholder="Enter room name"
-        )
-
-        description = st.text_area(
-            "Description",
-            placeholder="Enter room description"
-        )
-
-        if st.button("Create Room"):
-
-            response = requests.post(
-                f"{API_URL}/rooms/",
-                headers=get_headers(),
-                json={
-                    "name": name,
-                    "description": description
-                }
-            )
-
-            if response.status_code == 201:
-                st.success("Room created successfully!")
-                st.rerun()
-            else:
-                st.error(
-                    response.json().get(
-                        "detail",
-                        "Failed to create room"
-                    )
-                )
+    with col2:
+        st.write("")
+        if st.button("🚪 Logout", use_container_width=True):
+            logout()
 
     st.divider()
-    st.subheader("Your Rooms")
 
-    response = requests.get(
-        f"{API_URL}/rooms/",
-        headers=get_headers()
+
+    # Information
+    st.info(
+        """
+### Welcome!
+
+Create separate chat rooms for different projects or datasets.
+
+Inside every room you can:
+
+- 📤 Upload documents
+- 💬 Chat with AI
+- 📚 View sources
+- 🗑️ Delete files
+- 🧹 Clear chat history
+"""
     )
 
-    if response.status_code != 200:
-        st.error(
-            response.json().get(
-                "detail",
-                "Failed to load rooms"
-            )
-        )
+    # Create Room
+    with st.expander("➕ Create New Room"):
+
+        with st.form("create_room_form", clear_on_submit=True):
+            room_name = st.text_input("Room Name",placeholder="Enter room name")
+            room_description = st.text_area("Description",placeholder="Optional description")
+            submitted = st.form_submit_button( "Create Room",use_container_width=True)
+
+            if submitted:
+                if not room_name.strip():
+                    st.error("Room name cannot be empty.")
+                else:
+                    try:
+                        response = requests.post(f"{API_URL}/rooms/",headers=get_headers(),json={"name": room_name.strip(),"description": room_description.strip()})
+
+                        if response.status_code == 201:
+                            st.success("Room created successfully!")
+                            time.sleep(0.5)
+                            st.rerun()
+
+                        else:
+                            st.error(response.json().get("detail","Failed to create room."))
+
+                    except requests.exceptions.ConnectionError:
+                        st.error("Cannot connect to backend server.")
+    st.divider()
+
+    # Load Rooms
+    st.subheader("Your Rooms")
+
+    try:
+
+        response = requests.get(f"{API_URL}/rooms/",headers=get_headers())
+
+        if response.status_code == 200:
+            rooms = response.json()
+
+            if not rooms:
+                st.info("No rooms found.\n\nCreate your first room above.")
+                return
+            
+        elif response.status_code == 401:
+            st.error("Session expired.")
+            logout()
+            return
+
+        else:
+            st.error(response.json().get("detail","Failed to load rooms."))
+            return
+
+    except requests.exceptions.ConnectionError:
+        st.error("Cannot connect to backend server.")
         return
-
-    rooms = response.json()
-
-    if not rooms:
-        st.info(
-            "You don't have any rooms yet. "
-            "Create your first room above."
-        )
-        return
-
-    # 2 Rooms Per Row
+    
+    # Room Cards
     for i in range(0, len(rooms), 2):
-
         cols = st.columns(2)
 
         for col, room in zip(cols, rooms[i:i + 2]):
+            with col:
+                with st.container(border=True):
+                    st.subheader(f"📁 {room['name']}")
+                    if room.get("description"):
+                        with st.expander("📄 Description"):
+                            st.write(room["description"])
+                    st.write("")
 
-            with col, st.container(border=True):
+                    enter_col, edit_col, delete_col = st.columns([2.4, 1.8, 1.9])
 
-                st.subheader(f"📁 {room['name']}")
+                # Enter Room
+                with enter_col:
+                    if st.button("💬 Enter Room",key=f"enter_{room['id']}",use_container_width=True):
+                        st.session_state.room_id = room["id"]
+                        st.session_state.room_name = room["name"]
+                        st.rerun()
 
-                # Description
-                if room.get("description"):
-                    with st.expander("📄 View Description"):
-                        st.write(room["description"])
-
-                st.write("")
-
-                # Buttons on Right Side
-                empty, buttons = st.columns([1, 2])
-
-                with buttons:
-
-                    enter, delete = st.columns([1.4, 1.3])
-
-                    with enter:
-                        if st.button(
-                            "Enter Room",
-                            key=f"enter_{room['id']}",
-                            use_container_width=True
-                        ):
-                            st.session_state.room_id = room["id"]
-                            st.session_state.room_name = room["name"]
-                            st.rerun()
-
-                    with delete:
-                        if st.button(
-                            "🗑️ Delete",
-                            key=f"delete_{room['id']}",
-                            use_container_width=True
-                        ):
-
-                            res = requests.delete(
-                                f"{API_URL}/rooms/{room['id']}",
-                                headers=get_headers()
-                            )
-
-                            if res.status_code == 200:
-                                st.success("Room deleted!")
-                                st.rerun()
+                # Edit Room
+                with edit_col:
+                    with st.popover("✏️ Edit",use_container_width=True):
+                        name = st.text_input("Room Name",value=room["name"],key=f"name_{room['id']}")
+                        description = st.text_area("Description",value=room.get("description",""),key=f"description_{room['id']}")
+                        if st.button("💾 Save Changes",key=f"save_{room['id']}",use_container_width=True):
+                            if not name.strip():
+                                st.error("Room name cannot be empty.")
                             else:
-                                st.error(
-                                    res.json().get(
-                                        "detail",
-                                        "Failed to delete room"
-                                    )
-                                )
+                                try:
+                                    with st.spinner("Updating room..."):
+                                        response = requests.patch(
+                                            f"{API_URL}/rooms/{room['id']}",
+                                            headers=get_headers(),
+                                            json={
+                                                "name": name.strip(),
+                                                "description": description.strip()
+                                            }
+                                        )
 
+                                        if response.status_code == 200:
+                                            st.success("Room updated successfully!")
+                                            time.sleep(0.5)
+                                            st.rerun()
+                                        else:
+                                            st.error(response.json().get("detail","Failed to update room."))
+
+                                except requests.exceptions.ConnectionError:
+                                    st.error("Cannot connect to backend.")
+
+                # Delete Room
+                with delete_col:
+                    with st.popover( "Delete",use_container_width=True):
+                        st.warning("Are you sure you want to delete this room? This action cannot be undone.")
+                        if st.button("❌ Confirm Delete",key=f"delete_{room['id']}",use_container_width=True):
+                            try:
+                                with st.spinner("Deleting room..."):
+                                    response = requests.delete(
+                                        f"{API_URL}/rooms/{room['id']}",
+                                        headers=get_headers()
+                                    )
+
+                                    if response.status_code == 200:
+                                        st.success("Room deleted successfully!")
+                                        time.sleep(0.5)
+                                        st.rerun()
+                                    else:
+                                        st.error(response.json().get("detail","Failed to delete room."))
+
+                            except requests.exceptions.ConnectionError:
+                                st.error("Cannot connect to backend.") 
+# instructions popup close helper 
+def close_instructions():
+    st.session_state.show_instructions = False
+# Instructions Popup                                
+@st.dialog("🛍️ Product Assistant Guide", width="small",on_dismiss=close_instructions)
+def show_instructions_popup():
+
+    st.markdown( """
+                ### 🛍️ Adding Product Information
+
+Upload your product files to help the AI answer your questions.
+
+**Supported File Types:**
+
+📄 **Documents (PDF, DOCX, PPTX)** — 20 MB
+Product catalogs, specifications, manuals, and policies.
+
+🖼️ **Images (PNG, JPG, JPEG)** — 10 MB 
+Product images, labels, and screenshots.
+
+🎥 **Videos (MP4, MOV, AVI)** — 200 MB 
+Audio is extracted and converted to text.
+
+🎵 **Audio (MP3, WAV, M4A)** — 30 MB  
+Speech is automatically transcribed.
+
+📝 **Text Data (TXT, MD, CSV)** — 5 MB
+Product descriptions, prices, inventory, and other data.
+
+---
+
+### 💬 Chat with Your Product Assistant
+Ask questions about your uploaded products.
+
+📚 **Sources:**  
+Expand the Sources section to see the files and text used for the answer.
+
+                """)
+
+    st.divider()
+
+    if st.button("Got it ✓", use_container_width=True):
+        st.session_state.show_instructions = False
+        st.rerun()
 
 
 # Room View
@@ -263,244 +293,145 @@ def show_room_page():
 
     room_id = st.session_state.room_id
     room_name = st.session_state.room_name
+    headers = get_headers()
 
-    st.title(f"📚 {room_name}")
+    # Show instructions automatically when entering room
+    if st.session_state.show_instructions:
+        show_instructions_popup()
 
-    # Back to Rooms
-    if st.button("⬅️ Back to Rooms"):
+    # SIDEBAR
+    with st.sidebar:
 
-        st.session_state.room_id = None
-        st.session_state.room_name = None
+        if st.button("⬅️ Back to Rooms",use_container_width=True):
+            st.session_state.room_id = None
+            st.session_state.room_name = None
+            st.session_state.show_instructions = True
+            st.rerun()
 
-        st.rerun()
+        # Instructions button
+        if not st.session_state.show_instructions:
+            if st.button("📖 Instructions", use_container_width=True):
+                st.session_state.show_instructions = True
+                st.rerun()
+
+        # Clear Chat History
+        if st.button("🗑️ Clear Chat History",use_container_width=True):
+            delete_response = requests.delete(f"{API_URL}/chat/{room_id}/history",headers=headers)
+            if delete_response.status_code == 200:
+                st.success("Chat history cleared!")
+                st.rerun()
+            else:
+                st.error(delete_response.json().get("detail","Failed to clear chat history."))
+        
+
+        st.title(f"📁 {room_name}")
+        st.divider()
+
+        # Upload File
+        st.subheader("📤 Upload File")
+
+        uploaded_file = st.file_uploader(
+            "Choose file",
+            type=[
+                "pdf","docx","csv","txt",
+                "md","pptx",
+                "jpg","jpeg","png",
+                "mp3","wav","m4a",
+                "mp4","mov","avi"
+            ],
+            label_visibility="collapsed"
+        )
 
 
-    st.divider()
+        if st.button("Upload",use_container_width=True):
 
-
-    # Two Column Layout
-    left_column, right_column = st.columns([1, 3])
-
-
-    # LEFT SIDEBAR - FILES
-    with left_column:
-
-        # UPLOAD SECTION (expandable)
-        with st.expander("📤 Upload File", expanded=False):
-
-            # File uploader
-            uploaded_file = st.file_uploader(
-                "Upload a file",
-                type=["pdf","docx","csv","txt","md","pptx","jpg","jpeg",
-                    "png","mp3","wav","m4a","mp4","mov","avi"]
-            )
-
-            # Upload button
-            if uploaded_file is not None:
-                if st.button("Upload File"):
-
-                    files = {
-                        "file": (
-                            uploaded_file.name,
-                            uploaded_file.getvalue(),
-                            uploaded_file.type
-                        )
-                    }
-
-
-                    response = requests.post(
-                        f"{API_URL}/upload/{room_id}",
-                        headers=get_headers(),
-                        files=files
+            if uploaded_file:
+                files = {
+                    "file":(
+                        uploaded_file.name,
+                        uploaded_file.getvalue(),
+                        uploaded_file.type
                     )
+                }
+                with st.spinner("⏳ Uploading file... Please wait"):
+                    response = requests.post(f"{API_URL}/upload/{room_id}",headers=headers,files=files)
 
-
-                    if response.status_code == 200:
-                        st.success("File uploaded successfully!")
-                        st.rerun()
-
-                    else:
-
-                        try:
-                            error_message = response.json().get(
-                                "detail",
-                                "File upload failed"
-                            )
-                        except:
-                            error_message = "File upload failed"
-
-                        st.error(error_message)
-
-
-        # FILE LIST (expandable)
-        with st.expander("📁 Your Files", expanded=False):
-
-            # Get uploaded files for current room
-            files_response = requests.get(f"{API_URL}/upload/{room_id}",headers=get_headers())
-
-
-            if files_response.status_code == 200:
-                uploaded_files = files_response.json()
-
-                if not uploaded_files:
-                    st.info("No files uploaded yet.")
+                if response.status_code == 200:
+                    st.success("File uploaded!")
+                    st.rerun()
 
                 else:
-                    for uploaded_file in uploaded_files:
-
-                        filename = uploaded_file.get("filename","Unknown")
-                        file_type = uploaded_file.get("file_type","Unknown")
-                        file_status = uploaded_file.get("status","Unknown")
-
-                        st.write(f"📄 **{filename}**")
-                        st.write(f"Type: `{file_type}`")
-
-                        # Status badge
-                        if file_status == "ready":
-                            st.success("🟢 Ready")
-                        elif file_status == "processing":
-                            st.warning("🟡 Processing")
-                        elif file_status == "failed":
-                            st.error("🔴 Failed")
-                        else:
-                            st.info(f"Status: {file_status}")
-
-                        st.divider()
-            else:
-                try:
-                    error_message = files_response.json().get("detail", "Failed to load uploaded files")
-
-                except:
-                    error_message = ("Failed to load uploaded files")
-
-                st.error(error_message)
+                    st.error(response.json().get("detail","Upload failed"))
 
         st.divider()
 
-        # CLEAR CHAT HISTORY
-        if st.button("🗑️ Clear Chat History"):
+        # Uploaded Files
+        st.subheader("📂 Files")
+        files_response = requests.get(f"{API_URL}/upload/{room_id}",headers=headers)
 
-            delete_response = requests.delete(
-                f"{API_URL}/chat/{room_id}/history",
-                headers=get_headers()
-            )
+        if files_response.status_code == 200:
+            uploaded_files = files_response.json()
 
-            if delete_response.status_code == 200:
+            if not uploaded_files:
+                st.caption("No files uploaded yet.")
 
-                st.success("Chat history deleted successfully!")
-                st.rerun()
+            for file in uploaded_files:
+                col1, col2 = st.columns([4,1])
 
-            else:
+                with col1:
+                    st.write(f"📄 {file.get('filename')}")
 
-                try:
-                    error_message = delete_response.json().get(
-                        "detail",
-                        "Failed to delete chat history"
-                    )
-
-                except:
-                    error_message = "Failed to delete chat history"
-
-                st.error(error_message)
+                    status = file.get("status","unknown")
 
 
-    with right_column:
-        st.subheader("💬 Chat")
+                    if status == "ready":
+                        st.success("READY")
+                    elif status == "processing":
+                        st.warning("PROCESSING")
+                    else:
+                        st.error("FAILED")
 
-        # LOAD CHAT HISTORY (messages render above the chat input)
-        history_response = requests.get(
-            f"{API_URL}/chat/{room_id}/history",
-            headers=get_headers(),
-            params={
-                "skip": 0,
-                "limit": 100
-            }
-        )
+                with col2:
 
-        if history_response.status_code == 200:
-            history = history_response.json()
+                    if st.button("🗑️",key=f"delete_{file['id']}"):
+                        delete_response = requests.delete(f"{API_URL}/upload/{room_id}/{file['id']}",headers=headers)
+                        if delete_response.status_code == 200:
+                            st.rerun()
 
-            # Display previous messages
-            for message in history:
-                role = message.get("role")
-                content = message.get("content", "")
+    # CHAT AREA
+    st.title("💬 Chat with AI")
+    history_response = requests.get(f"{API_URL}/chat/{room_id}/history",headers=headers,params={"skip":0,"limit":100})
 
-                if role == "user":
-                    with st.chat_message("user"):
-                        st.write(content)
+    if history_response.status_code == 200:
+        history = history_response.json()
 
+        for message in history:
+            with st.chat_message(message["role"]):
+                st.write(message.get("content",""))
 
-                elif role == "assistant":
-                    with st.chat_message("assistant"):
-                        st.write(content)
+                if message["role"] == "assistant":
+                    with st.expander("📚 Sources"):
+                        sources = message.get("sources",[])
 
-                        # SOURCES SECTION
-                        with st.expander("📚 Sources",expanded=False):
-                            sources = message.get( "sources",[])
+                        if sources:
+                            for source in sources:
+                                st.write(f"📄 {source.get('filename')} | "f"Chunk: {source.get('chunk_index')}")
+                                st.caption(source.get("excerpt",""))
+                        else:
+                            st.write("No sources found")
+    else:
+        st.error("Failed to load chat history")
 
-                            if sources:
-                                for source in sources:
-                                    filename = source.get("filename","Unknown")
-                                    file_type = source.get("file_type","Unknown")
-                                    chunk_index = source.get("chunk_index","Unknown")
-                                    excerpt = source.get("excerpt","")
+    # Chat Input
+    query = st.chat_input("Ask a question about your documents...")
 
-                                    st.write(
-                                        f"📄 **{filename}** "
-                                        f"| Type: `{file_type}` "
-                                        f"| Chunk: `{chunk_index}`"
-                                        f"| Excerpt: {excerpt}"
-                                    )
-                            else:
-                                st.write("No sources found")
+    if query:
+        response = requests.post(f"{API_URL}/chat/{room_id}",headers=headers,json={"query":query})
 
-            # AUTO SCROLL TO BOTTOM
-            if history:
-                st.markdown('<div id="chat-bottom-anchor"></div>', unsafe_allow_html=True)
-
-                components.html(
-                    """
-                    <script>
-                        var anchor = window.parent.document.getElementById("chat-bottom-anchor");
-                        if (anchor) {
-                            anchor.scrollIntoView({behavior: "smooth", block: "end"});
-                        }
-                    </script>
-                    """,
-                    height=0,
-                )
-
+        if response.status_code == 200:
+            st.rerun()
         else:
-            st.error("Failed to load chat history.")
-
-
-        # CHAT INPUT 
-        query = st.chat_input("Ask a question about your documents...")
-
-        if query:
-
-            # SEND QUERY TO BACK
-            response = requests.post(
-                f"{API_URL}/chat/{room_id}",
-                headers=get_headers(),
-                json={
-                    "query": query
-                }
-            )
-
-            if response.status_code == 200:
-                # Reload history from backend so the new message
-                # appears above the chat input, in its normal place
-                st.rerun()
-
-            else:
-                try:
-                    error_message = response.json().get("detail","Chat request failed")
-
-                except:
-                    error_message = "Chat request failed"
-
-                st.error(error_message)
+            st.error("Chat request failed")
 
 
 # main app routing
