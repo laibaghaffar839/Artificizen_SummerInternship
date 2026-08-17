@@ -7,7 +7,7 @@ from routers.chat import router as chat_router
 
 from services.qdrant import create_collection
 
-app = FastAPI(title="E-commerce & Retail (Multimodal RAG Platform )")
+app = FastAPI(title="E-commerce & Retail (Multimodal RAG Platform )",root_path="/api")
 
 app.include_router(auth_router)
 app.include_router(rooms_router)
