@@ -47,7 +47,7 @@ def create_access_token(data: dict,expires_delta: timedelta | None = None) -> st
     return encoded_jwt
 
 # get current user
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 # Verify JWT token
 def verify_token(token: str):
