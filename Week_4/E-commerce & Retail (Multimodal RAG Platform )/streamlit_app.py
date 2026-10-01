@@ -250,34 +250,35 @@ def close_instructions():
 def show_instructions_popup():
 
     st.markdown( """
-                ### 🛍️ Adding Product Information
+                ### 🛍️ Add Your Product Information
 
-Upload your product files to help the AI answer your questions.
+Upload your product files, and the assistant will use them to answer your questions.
 
-**Supported File Types:**
+**What you can upload:**
 
-📄 **Documents (PDF, DOCX, PPTX)** — 20 MB
-Product catalogs, specifications, manuals, and policies.
+📄 **Documents** (PDF, DOCX, PPTX), up to 20 MB
+Catalogs, product specs, manuals, and policies.
 
-🖼️ **Images (PNG, JPG, JPEG)** — 10 MB 
-Product images, labels, and screenshots.
+🖼️ **Images** (PNG, JPG, JPEG), up to 10 MB
+Product photos, labels, and screenshots.
 
-🎥 **Videos (MP4, MOV, AVI)** — 200 MB 
-Audio is extracted and converted to text.
+🎥 **Videos** (MP4, MOV, AVI), up to 200 MB
+We pull out the audio and turn it into text.
 
-🎵 **Audio (MP3, WAV, M4A)** — 30 MB  
-Speech is automatically transcribed.
+🎵 **Audio** (MP3, WAV, M4A), up to 30 MB
+Speech is automatically written out as text.
 
-📝 **Text Data (TXT, MD, CSV)** — 5 MB
-Product descriptions, prices, inventory, and other data.
+📝 **Text files** (TXT, MD, CSV), up to 5 MB
+Product descriptions, prices, stock lists, and similar data.
 
 ---
 
-### 💬 Chat with Your Product Assistant
-Ask questions about your uploaded products.
+### 💬 Ask About Your Products
 
-📚 **Sources:**  
-Expand the Sources section to see the files and text used for the answer.
+Once your files are uploaded, just type your question, like you'd ask a teammate.
+
+📚 **Want to see where an answer came from?**
+Open the Sources section to see the exact files and text the assistant used.
 
                 """)
 
@@ -426,7 +427,13 @@ def show_room_page():
     query = st.chat_input("Ask a question about your documents...")
 
     if query:
-        response = requests.post(f"{API_URL}/chat/{room_id}",headers=headers,json={"query":query})
+
+        with st.chat_message("user"):
+            st.write(query)
+
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                response = requests.post(f"{API_URL}/chat/{room_id}",headers=headers,json={"query":query})
 
         if response.status_code == 200:
             st.rerun()
