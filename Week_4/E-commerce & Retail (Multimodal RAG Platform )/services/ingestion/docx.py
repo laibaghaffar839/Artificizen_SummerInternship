@@ -1,8 +1,11 @@
 from docx import Document
+from services.ingestion.image import extract_image
+import tempfile
+
 
 def extract_docx(file_path: str) -> list[str]:
     """
-    Extract text from DOCX paragraphs and tables.
+    Extract text, tables, and embedded images from DOCX.
     Returns a list of text strings.
     """
 
@@ -15,6 +18,7 @@ def extract_docx(file_path: str) -> list[str]:
 
         if text:
             extracted_text.append(text)
+
     # Extract tables
     for table in document.tables:
         for row in table.rows:
@@ -28,5 +32,21 @@ def extract_docx(file_path: str) -> list[str]:
 
             if row_text:
                 extracted_text.append(" | ".join(row_text))
+
+    # Extract embedded images
+    for rel in document.part.rels.values():
+
+        if "image" in rel.target_ref:
+
+            image_bytes = rel.target_part.blob
+
+            with tempfile.NamedTemporaryFile(suffix=".jpg") as temp_image:
+
+                temp_image.write(image_bytes)
+                temp_image.flush()
+
+                image_text = extract_image(temp_image.name)
+
+                extracted_text.extend(image_text)
 
     return extracted_text
