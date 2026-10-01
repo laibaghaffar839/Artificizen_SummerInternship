@@ -408,7 +408,7 @@ def show_room_page():
 
         for message in history:
             with st.chat_message(message["role"]):
-                st.write(message.get("content",""))
+                st.markdown(message.get("content",""))
 
                 if message["role"] == "assistant":
                     with st.expander("📚 Sources"):
