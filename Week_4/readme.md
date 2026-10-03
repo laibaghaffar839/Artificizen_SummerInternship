@@ -16,22 +16,22 @@ This platform unifies retail business information into a secure, room-based Retr
 
 ## Key Features
 
-* Secure user registration and login using JWT authentication
-* Bcrypt password hashing
-* Room-based workspace management
-* Multimodal file upload and processing
-* Support for PDF, DOCX, CSV, PPTX, MD, TXT, PNG, JPG, MP3, WAV, and MP4 files
-* Image text extraction using Tesseract OCR
-* Audio transcription using Groq Whisper
-* Video-to-text processing through audio extraction and Whisper
-* Text chunking with overlapping segments
-* Embeddings using `all-MiniLM-L6-v2`
-* Semantic search using Qdrant
-* RAG-based question answering using Groq Llama 3.3
-* Persistent conversation history
-* Source citations for generated answers
-* PostgreSQL database for application data
-* Protected API routes and user-specific access control
+- JWT-based user registration and login
+- Bcrypt password hashing
+- Room-based workspace management
+- Multimodal file upload and processing
+- Support for PDF, DOCX, CSV, PPTX, MD, TXT, PNG, JPG, MP3, WAV, and MP4
+- Image understanding using Groq `qwen/qwen3.8-27b`
+- Audio transcription using Groq Whisper
+- Video-to-text processing using audio extraction and Whisper
+- Text chunking with overlapping segments
+- Embeddings using `all-MiniLM-L6-v2`
+- Semantic search using Qdrant
+- RAG-based question answering using Groq `openai/gpt-oss-120b`
+- Persistent conversation history
+- Source citations for generated answers
+- PostgreSQL database
+- Protected API routes and user-specific data isolation
 
 ---
 
@@ -63,7 +63,7 @@ This platform unifies retail business information into a secure, room-based Retr
 │   │   ├── audio.py          # Audio transcription
 │   │   ├── csv.py            # CSV parser
 │   │   ├── docx.py           # DOCX parser
-│   │   ├── image.py          # Image OCR extractor
+│   │   ├── image.py          # Image extractor
 │   │   ├── markdown.py       # Markdown parser
 │   │   ├── pdf.py            # PDF parser
 │   │   ├── pptx.py           # PowerPoint parser
@@ -102,43 +102,15 @@ This platform unifies retail business information into a secure, room-based Retr
 | Vector Database     | Qdrant                  |
 | Embeddings          | Sentence Transformers   |
 | Embedding Model     | `all-MiniLM-L6-v2`      |
-| LLM                 | Groq Llama 3.3          |
+| LLM                 | Groq openai/gpt-oss-120b|
 | Audio Transcription | Groq Whisper            |
-| Image OCR           | Tesseract + Pytesseract |
+| Image OCR           | qwen/qwen3.8-27b        |
 | PDF Processing      | PyMuPDF4LLM             |
 | DOCX Processing     | python-docx             |
 | CSV Processing      | Pandas                  |
 | PPTX Processing     | python-pptx             |
 | Video Processing    | MoviePy                 |
 | Database Migrations | Alembic                 |
-
----
-
-## System Requirements and Prerequisites
-
-### Tesseract OCR
-
-Image text extraction uses Tesseract OCR through Pytesseract.
-
-#### macOS using MacPorts
-
-```bash
-sudo port selfupdate
-sudo port install tesseract
-```
-
-#### macOS using Homebrew
-
-```bash
-brew install tesseract
-```
-
-#### Ubuntu / Linux
-
-```bash
-sudo apt-get update
-sudo apt-get install tesseract-ocr -y
-```
 
 ---
 
@@ -172,28 +144,6 @@ venv\Scripts\activate
 ```
 
 ### 4. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## requirements.txt (IMPORTANT)
-
-This project uses a `requirements.txt` file to manage all dependencies and ensure consistent environment setup across different systems.
-
-### Generate requirements.txt
-
-After installing all dependencies in your environment, generate the file using:
-
-```bash
-pip freeze > requirements.txt
-```
-
-### Install from requirements.txt
-
-On any new system, install all dependencies using:
 
 ```bash
 pip install -r requirements.txt
@@ -342,7 +292,7 @@ User Registration / Login
 | PDF       | PyMuPDF4LLM            |
 | DOCX      | python-docx            |
 | CSV       | Pandas                 |
-| PNG / JPG | Tesseract OCR          |
+| PNG / JPG | Groq vision model      |
 | MP3 / WAV | Groq Whisper           |
 | MP4       | MoviePy + Groq Whisper |
 | PPTX      | python-pptx            |
@@ -356,7 +306,7 @@ User Registration / Login
 * PDF → Markdown extraction
 * DOCX → structured text extraction
 * CSV → row-wise conversion
-* Images → OCR text extraction
+* Images → groq vision model
 * Audio → Whisper transcription
 * Video → audio extraction + transcription
 * PPTX → slide-wise text extraction
