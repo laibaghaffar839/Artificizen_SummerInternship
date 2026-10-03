@@ -35,7 +35,7 @@ def logout():
 # Login / Register UI
 def show_auth_page():
 
-    st.title("📚 E-commerce & Retail Q&A Chatbot")
+    st.subheader("📚 E-commerce & Retail (Multimodal RAG Chatbot)")
 
     login_tab, register_tab = st.tabs(["Login", "Register"])
 
